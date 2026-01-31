@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Akira's website</title>
+
+  <!-- mobile-friendly viewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- shared styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ── HEADER & NAV ───────────────────────────── -->
+  <header>
+    <!-- <h1>Akira</h1> -->
+    
+    <!-- hamburger checkbox (mobile) -->
+    <nav>
+      <input type="checkbox" id="nav-toggle">
+      <label for="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </label>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#links">Contact/links</a></li>
+        <li><a href="#writing">Writing</a></li>
+      </ul>
+    </nav>
+
+
+    
+    <!-- DARK MODE SWITCH -->
+    <div class="mode-switch">
+      <label for="dark-toggle" aria-label="Toggle dark mode">
+        <input type="checkbox" id="dark-toggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+
+    
+  </header>
+
+  <!-- ── MAIN CONTENT (SINGLE-PAGE SECTIONS) ───────────────────── -->
+  <main>
+    <!-- About (default visible) -->
+    <section id="about" class="page active">
+      <h2>Salutations! I'm Akira :)</h2>
+      <p>
+        I'm an undergraduate at UW–Madison, majoring in mathematics and engineering physics; in particular, I study representation theory with a focus on homological methods. Outside class, I enjoy talking with friends and exploring maths. I speak English as well as a wee bit of Spanish, French, and Chinese; I'm also learning German! In addition to these other subjects, I also relish learning about learning itself (and, more generally, methods for productivity overall).
+        <br><br>
+        Please feel free to reach out if you'd like to chat about maths, learning/self-improvement, languages, or anything else! :D
+      </p>
+    </section>
+
+    <!-- Links -->
+    <section id="links" class="page">
+      <h2>Links</h2>
+      <ul>
+        <li>
+          <a href="http://emailto:akiratcgl@gmail.com/"
+             target="_blank" rel="noopener noreferrer">Email</a>
+        </li>
+        <li>
+          <a href="https://www.youtube.com/@Akira-the-Catgirl"
+             target="_blank" rel="noopener noreferrer">YouTube channel</a>
+        </li>
+        <li>
+          <a href="https://pronouns.page/@AkiraTheCatgirl"
+             target="_blank" rel="noopener noreferrer">Pronouns.page</a>
+        </li>
+        <li>
+          Discord: akirathemathsgirl
+        </li>
+<!--         <li>
+          <a href="https://arxiv.org/a/.html"
+             target="_blank" rel="noopener noreferrer">arXiv profile</a>
+        </li> -->
+<!--         <li>
+          <a href="https://zenodo.org/communities/akira"
+             target="_blank" rel="noopener noreferrer">Zenodo uploads</a>
+        </li> -->
+      </ul>
+    </section>
+
+    <!-- Writing / PDFs -->
+    <section id="writing" class="page">
+      <h2>Polished work</h2>
+      <ul>
+        
+      </ul>
+      <h2>Unpolished or incorrect work</h2>
+      <ul>
+        <li>
+          <a href="pdfs/equiv-char-of-adjoints.pdf"
+             target="_blank" rel="noopener noreferrer">Equivalent characterizations of adjoints</a>
+        </li>
+<!--         <li>
+          <a href="pdfs/another-note.pdf"
+             target="_blank" rel="noopener noreferrer">Triangle identities note (PDF)</a>
+        </li> -->
+      </ul>
+    </section>
+  </main>
+
+  <!-- ── INLINE JS ROUTER (12 lines) ─────────────── -->
+  <script>
+    if (!location.hash) {
+      history.replaceState(null, '', '#about');
+    }
+    
+    /* helper to show the requested section */
+    function showPage(id) {
+      // — switch sections (existing code) —
+      document.querySelector('.page.active').classList.remove('active');
+      document.getElementById(id).classList.add('active');
+
+      // — NEW: switch the nav link underline —
+      // remove old
+      const oldLink = document.querySelector('nav a.active');
+      if (oldLink) oldLink.classList.remove('active');
+
+      // add to the one matching #id
+      const newLink = document.querySelector(`nav a[href="#${id}"]`);
+      if (newLink) newLink.classList.add('active');
+    }
+
+    /* initial load (respect bookmark or default to ‘about’) */
+    showPage(location.hash.slice(1) || 'about');
+
+    /* on nav click, switch page without reloading */
+    document.querySelectorAll('nav a').forEach(link=>{
+      link.addEventListener('click', e=>{
+        e.preventDefault();
+        const id = link.getAttribute('href').slice(1);
+        history.pushState(null, '', '#'+id);  // update address bar
+        showPage(id);
+        /* close mobile sidebar */
+        document.getElementById('nav-toggle').checked = false;
+      });
+    });
+
+    /* make back/forward buttons work */
+    window.addEventListener('popstate', ()=>
+      showPage(location.hash.slice(1) || 'about'));
+
+
+
+    document.addEventListener('click', e => {
+      const navToggle = document.getElementById('nav-toggle');
+      if (!navToggle.checked) return;           // menu closed → skip
+
+      // if click is inside <nav>, on the hamburger, or on the dark switch → skip
+      if (
+        e.target.closest('nav') ||
+        e.target.closest('label[for="nav-toggle"]') ||
+        e.target.closest('.mode-switch')       // ← new exception
+      ) {
+        return;
+      }
+
+      // otherwise, close the menu
+      navToggle.checked = false;
+    });
+
+
+
+
+
+    // — DARK MODE TOGGLE —
+    // On load, read stored theme or default to light:
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    document.getElementById('dark-toggle').checked = (currentTheme === 'dark');
+
+    // When the switch is clicked, toggle and save:
+    document.getElementById('dark-toggle').addEventListener('change', e => {
+      const theme = e.target.checked ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+    });
+  </script>
+</body>
+</html>

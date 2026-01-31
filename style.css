@@ -1,0 +1,233 @@
+/* ---- Reset small defaults ---- */
+*{box-sizing:border-box;margin:0;padding:0}
+
+/* ---- Site-wide layout ---- */
+body{font-family:sans-serif;line-height:1.5}
+header{background:#183153;color:#fff;padding:.8rem 1rem}
+header h1{font-size:1.1rem}
+h2{text-align: center;margin-bottom: 1rem}
+main{padding:1rem 20%;}
+ul{list-style-type: none}
+ul li::before {
+  content: "– ‎  "; /* hyphen + non-breaking space */
+}
+nav ul li::before {content: "";}
+a {
+  color: var(--link, #0000FF);  /* fallback to #0066cc in light mode */
+  text-decoration: underline;
+}
+a:hover {
+  color: var(--hoverLink, #0000CC);
+}
+
+
+
+
+/* ---- Desktop nav ---- */
+nav ul{display:flex;gap:1rem;list-style:none}
+nav a{color:#fff;text-decoration:none;font-size:1.5rem}
+nav a:hover{opacity:.6; color: #fff}
+nav a.active {
+  text-decoration: underline;
+}
+
+
+/* hide the checkbox itself */
+#nav-toggle{display:none}
+
+/* ---------- Mobile (≤700 px) ---------- */
+@media (max-width:700px){
+
+  main{padding:1rem 2rem;}
+  nav ul li{padding:.5rem 0;text-align:left}
+  
+  /* ☰ icon */
+  #nav-toggle + label{
+    display:block;              /* show on mobile */
+    cursor:pointer;
+    padding:0.5rem;
+    z-index:1500;               /* sits above the drawer */
+  }
+  #nav-toggle + label span{
+    display:block;width:25px;height:3px;
+    background:#fff;margin:5px 0;
+  }
+
+  /* slide-out drawer (initially off-screen) */
+  nav ul{
+    position:fixed;
+    top:0; left:-220px;         /* hidden */
+    width:150px; height:100vh;
+    flex-direction:column;
+    list-style:none;
+    background:#10243d;
+    padding-top:4rem;
+    gap:1rem;
+    transition:left .3s ease;
+    z-index:1000;               /* above page content */
+  }
+
+  /* when the checkbox is ticked, move drawer in */
+  #nav-toggle:checked ~ ul{left:0}
+}
+
+/* ---------- Desktop (≥701 px) ---------- */
+@media (min-width:701px){
+  nav ul{display:flex;gap:1rem;list-style:none}
+  #nav-toggle{display:none}          /* hide ☰ on desktop */
+  nav label{display:none}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ══ 1) THEME VARIABLES ════════════════════════════ */
+:root {
+  /* light mode colors */
+  --bg:    #fff;
+  --fg:    #000;
+  --hdr-bg:#234676;
+  --hdr-fg:#fff;
+  --nav-bg:#193653;
+}
+
+[data-theme="dark"] {
+  /* dark mode overrides */
+  --bg:    #111;
+  --fg:    #eee;
+  --hdr-bg:#183153;
+  --hdr-fg:#fff;
+  --nav-bg:#10243d;
+  --link:  #3264ff;
+  --hoverLink:  #79b8ff;
+}
+
+body {
+  background: var(--bg);
+  color:      var(--fg);
+}
+
+/* header/nav use themed colors */
+header {
+  background: var(--hdr-bg);
+  color:      var(--hdr-fg);
+  display:     flex;           /* lay out children in a row */
+  align-items: center;
+  padding:     0.8rem 1rem;
+  gap:         1rem;           /* space between items */
+  position:    relative;
+}
+
+/* ── Dark mode switch styling ─────────────────────── */
+.mode-switch {
+  margin-left: auto;           /* push it to the far right */
+}
+.mode-switch input {
+  display: none;               /* hide the raw checkbox */
+}
+.mode-switch .slider {
+  width: 4rem; height: 2rem;
+  background: #ccc;
+  border-radius: 2rem;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+  transition: background .2s;
+}
+/* when checked, darken track */
+.mode-switch input:checked + .slider {
+  background: #666;
+}
+
+.mode-switch .slider::before {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: calc(2rem - 4px);
+  height: calc(2rem - 4px);
+  background-color: #fff;          /* white knob */
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-position: center;     /* center the icon */
+  background-size: 60% 60%;        /* scale it down */
+  /* 8-spoke **unfilled** sun SVG as a data-URI */
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%225%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22/%3E%3Cg%20stroke%3D%22black%22%20stroke-width%3D%222%22%3E%3Cline%20x1%3D%2212%22%20y1%3D%221%22%20x2%3D%2212%22%20y2%3D%224%22/%3E%3Cline%20x1%3D%2212%22%20y1%3D%2220%22%20x2%3D%2212%22%20y2%3D%2223%22/%3E%3Cline%20x1%3D%221%22%20y1%3D%2212%22%20x2%3D%224%22%20y2%3D%2212%22/%3E%3Cline%20x1%3D%2220%22%20y1%3D%2212%22%20x2%3D%2223%22%20y2%3D%2212%22/%3E%3Cline%20x1%3D%224.22%22%20y1%3D%224.22%22%20x2%3D%226.36%22%20y2%3D%226.36%22/%3E%3Cline%20x1%3D%2217.64%22%20y1%3D%2217.64%22%20x2%3D%2219.78%22%20y2%3D%2219.78%22/%3E%3Cline%20x1%3D%224.22%22%20y1%3D%2219.78%22%20x2%3D%226.36%22%20y2%3D%2217.64%22/%3E%3Cline%20x1%3D%2217.64%22%20y1%3D%226.36%22%20x2%3D%2219.78%22%20y2%3D%224.22%22/%3E%3C/g%3E%3C/svg%3E");
+  transition: transform .3s, background-image .3s, background-color .3s;
+}
+
+.mode-switch input:checked + .slider::before {
+  transform: translateX(2rem);
+  background-color: #333;          /* dark knob */
+  /* filled white crescent moon, centered */
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M15%2012a7%207%200%201%201-7-7%205%205%200%200%200%207%207z%22%20fill%3D%22white%22/%3E%3C/svg%3E");
+  background-position: 95% 50%;   /* shift the moon slightly right */
+  background-size: 70% 70%;
+}
+
+
+
+.mode-switch input:checked + .slider::before {
+  transform: translateX(2rem);
+}
+
+/* ── Hamburger: shrink hitbox ─────────────────────── */
+.hamburger {
+  display: inline-block;
+  padding: 0.5rem;
+  cursor: pointer;
+  z-index: 1500;
+}
+.hamburger span {
+  display: block;
+  width: 25px; height: 3px;
+  background: #fff;
+  margin: 4px 0;
+}
+
+/* ── Mobile menu drawer (as before) ──────────────── */
+@media (max-width:700px){
+  nav ul {
+    position: fixed; top: 0; left: -220px;
+    width: 200px; height: 100vh;
+    flex-direction: column;
+    background: var(--nav-bg);
+    padding-top: 4rem; gap: 1rem;
+    transition: left .3s ease;
+    z-index: 1000;
+  }
+  #nav-toggle:checked ~ ul { left: 0; }
+}
+/* Desktop nav (unchanged) */
+@media (min-width:701px){
+  nav ul { display:flex; gap:1rem; list-style:none }
+  .hamburger { display:none }
+}
+
+
+
+
+
+
+
+
+/* Page-switching */
+.page{display:none}
+.page.active{display:block}
