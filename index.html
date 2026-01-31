@@ -86,26 +86,6 @@
       </ul>
     </section>
 
-    <!-- CV -->
-    <section id="cv" class="page">
-      <h2>Links</h2>
-      <ul>
-        <li>
-          <a href="http://emailto:akiratcgl@gmail.com/"
-             target="_blank" rel="noopener noreferrer">Email</a>
-        </li>
-        <li>
-          <a href="https://www.youtube.com/@Akira-the-Catgirl"
-             target="_blank" rel="noopener noreferrer">YouTube channel</a>
-        </li>
-        <li>
-          <a href="https://pronouns.page/@AkiraTheCatgirl"
-             target="_blank" rel="noopener noreferrer">Pronouns.page</a>
-        </li>
-        <li>
-          Discord: akirathemathsgirl
-        </li>
-
     <!-- Writing / PDFs -->
     <section id="writing" class="page">
       <h2>Polished work</h2>
@@ -151,17 +131,34 @@
     /* initial load (respect bookmark or default to ‘about’) */
     showPage(location.hash.slice(1) || 'about');
 
-    /* on nav click, switch page without reloading */
-    document.querySelectorAll('nav a').forEach(link=>{
-      link.addEventListener('click', e=>{
-        e.preventDefault();
-        const id = link.getAttribute('href').slice(1);
-        history.pushState(null, '', '#'+id);  // update address bar
-        showPage(id);
-        /* close mobile sidebar */
-        document.getElementById('nav-toggle').checked = false;
-      });
-    });
+    // /* on nav click, switch page without reloading */
+    // document.querySelectorAll('nav a').forEach(link=>{
+    //   link.addEventListener('click', e=>{
+    //     e.preventDefault();
+    //     const id = link.getAttribute('href').slice(1);
+    //     history.pushState(null, '', '#'+id);  // update address bar
+    //     showPage(id);
+    //     /* close mobile sidebar */
+    //     document.getElementById('nav-toggle').checked = false;
+    //   });
+    // });
+    /* on nav click, switch page without reloading (only for internal links) */
+document.querySelectorAll('nav a').forEach(link => {
+  link.addEventListener('click', e => {
+    const href = link.getAttribute('href');
+
+    // Only prevent default if the link is an internal anchor (starts with #)
+    if (href.startsWith('#')) {
+      e.preventDefault();
+      const id = href.slice(1);
+      history.pushState(null, '', '#' + id);  // update address bar
+      showPage(id);
+      /* close mobile sidebar */
+      document.getElementById('nav-toggle').checked = false;
+    }
+    // If it doesn't start with #, the browser will open it normally (like your CV!)
+  });
+});
 
     /* make back/forward buttons work */
     window.addEventListener('popstate', ()=>
